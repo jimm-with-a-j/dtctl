@@ -11,6 +11,8 @@ class Cluster:
         self.config = config
 
     def version(self):
+        """Returns the exact version of the Dynatrace cluster"""
+
         response = requests.get(
             self.config.tenant + VERSION_ENDPOINT,
             headers=self.config.auth_header
@@ -18,6 +20,8 @@ class Cluster:
         return response.json()['version']
 
     def time(self):
+        """Returns the exact cluster time"""
+
         response = requests.get(
             self.config.tenant + TIME_ENDPOINT,
             headers=self.config.auth_header

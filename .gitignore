@@ -1,3 +1,4 @@
 .idea
 dtctl.yaml
 *__pycache__
+*.yaml
