@@ -2,6 +2,7 @@
 
 import requests
 import yaml
+from dt_config_sending import validate_and_send
 
 ALERTING_PROFILES_ENDPOINT = '/api/config/v1/alertingProfiles/'
 
@@ -55,17 +56,32 @@ class AlertingProfiles:
 
         """
 
-        with open(config_file, "r") as f:
-            try:
-                json_payload = yaml.safe_load(f)
-                response = requests.post(
-                    self.config.tenant + ALERTING_PROFILES_ENDPOINT + 'validator',
-                    headers=self.config.auth_header,
-                    json=json_payload
-                )
-            except Exception as exc:
-                print(exc)
+        id = validate_and_send(
+            config_file,
+            self.config.tenant + ALERTING_PROFILES_ENDPOINT,
+            self.config.auth_header,
+        )
 
-        print(json_payload)
-        print(response.status_code)
-        print(response.content)
+        return id
+
+        # MOVED TO DT CONFIG SENDER MODULE
+        # with open(config_file, "r") as f:
+        #     try:
+        #         json_payload = yaml.safe_load(f)
+        #         validation_response = requests.post(
+        #             self.config.tenant + ALERTING_PROFILES_ENDPOINT + 'validator',
+        #             headers=self.config.auth_header,
+        #             json=json_payload
+        #         )
+        #
+        #         if validation_response.status_code == 204:
+        #             creation_response = requests.post(
+        #                 self.config.tenant + ALERTING_PROFILES_ENDPOINT,
+        #                 headers=self.config.auth_header,
+        #                 json=json_payload
+        #             )
+        #     except Exception as exc:
+        #         print(exc)
+        #
+        # print(creation_response.status_code)
+        # print(creation_response.content)
