@@ -2,6 +2,9 @@
 
 import requests
 
+VERSION_ENDPOINT = '/api/v1/config/clusterversion'
+TIME_ENDPOINT = '/api/v1/time'
+
 
 class Cluster:
     def __init__(self, config):
@@ -9,14 +12,14 @@ class Cluster:
 
     def version(self):
         response = requests.get(
-            self.config.tenant + '/api/v1/config/clusterversion',
+            self.config.tenant + VERSION_ENDPOINT,
             headers=self.config.auth_header
         )
         return response.json()['version']
 
     def time(self):
         response = requests.get(
-            self.config.tenant + '/api/v1/time',
+            self.config.tenant + TIME_ENDPOINT,
             headers=self.config.auth_header
         )
         return response.json()
