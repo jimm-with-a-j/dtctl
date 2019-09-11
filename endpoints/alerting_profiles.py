@@ -61,7 +61,7 @@ class AlertingProfiles:
             config_file,
             self.config.tenant + ALERTING_PROFILES_ENDPOINT,
             self.config.auth_header,
-        )
+        )['id']
 
         return rule_id
 
