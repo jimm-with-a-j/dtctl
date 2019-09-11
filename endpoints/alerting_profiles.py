@@ -54,34 +54,47 @@ class AlertingProfiles:
         """
         Creates an alerting profile using a provide file
 
+        :param config_file:
+        :return:
         """
-
-        id = validate_and_send(
+        rule_id = validate_and_send(
             config_file,
             self.config.tenant + ALERTING_PROFILES_ENDPOINT,
             self.config.auth_header,
         )
 
-        return id
+        return rule_id
 
-        # MOVED TO DT CONFIG SENDER MODULE
-        # with open(config_file, "r") as f:
-        #     try:
-        #         json_payload = yaml.safe_load(f)
-        #         validation_response = requests.post(
-        #             self.config.tenant + ALERTING_PROFILES_ENDPOINT + 'validator',
-        #             headers=self.config.auth_header,
-        #             json=json_payload
-        #         )
-        #
-        #         if validation_response.status_code == 204:
-        #             creation_response = requests.post(
-        #                 self.config.tenant + ALERTING_PROFILES_ENDPOINT,
-        #                 headers=self.config.auth_header,
-        #                 json=json_payload
-        #             )
-        #     except Exception as exc:
-        #         print(exc)
-        #
-        # print(creation_response.status_code)
-        # print(creation_response.content)
+    def delete(self, profile_id):
+        """
+        Removes the specified alerting profile
+
+        :param profile_id:
+        :return:
+        """
+        try:
+            deletion_response = None
+            assert (self.exists(profile_id))
+            deletion_response = requests.delete(
+                self.config.tenant + ALERTING_PROFILES_ENDPOINT + profile_id,
+                headers=self.config.auth_header
+            ).status_code
+        except AssertionError as assert_exception:
+            print("The specified profile id does not exist in the environment")
+
+        return deletion_response
+
+    def exists(self, profile_id):
+        """
+        Checks that the profile with specified id exists
+
+        :param profile_id:
+        :return:
+        """
+        alerting_profiles = self.list()
+        ap_exists = False
+        for ap in alerting_profiles:
+            if ap['id'] == profile_id:
+                ap_exists = True
+
+        return ap_exists
