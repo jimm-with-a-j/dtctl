@@ -21,18 +21,11 @@ def validate_and_send(config_file, target, headers, validationTarget=None):
     with open(config_file, "r") as file:
         try:
             json_payload = yaml.safe_load(file)
-            validation_response =requests.post(
-                target + 'validator',
-                headers=headers,
-                json=json_payload
-            )
+            validation_response = requests.post(target + 'validator', headers=headers, json=json_payload)
             if validation_response.status_code == VALIDATION_OK:
-                creation_response = requests.post(
-                    target,
-                    headers=headers,
-                    json=json_payload
-                )
+                creation_response = requests.post(target, headers=headers, json=json_payload)
         except yaml.YAMLError as exc:
+            print("Some issue loading your yaml, please verify it is valid.")
             print(exc)
 
-    return creation_response.json()["id"]
+    return creation_response.json()
