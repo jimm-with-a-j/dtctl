@@ -2,9 +2,10 @@
 
 import requests
 import yaml
-from dt_config_sending import validate_and_send
+from dtctl_modules.config_validate_and_send import validate_and_send
 
 ALERTING_PROFILES_ENDPOINT = '/api/config/v1/alertingProfiles/'
+SUCCESS = 204
 
 
 class AlertingProfiles:
@@ -65,24 +66,29 @@ class AlertingProfiles:
 
         return rule_id
 
-    def delete(self, profile_id):
+    def delete(self, *profile_ids):
         """
         Removes the specified alerting profile
 
         :param profile_id:
         :return:
         """
-        try:
-            deletion_response = None
-            assert (self.exists(profile_id))
-            deletion_response = requests.delete(
-                self.config.tenant + ALERTING_PROFILES_ENDPOINT + profile_id,
-                headers=self.config.auth_header
-            ).status_code
-        except AssertionError as assert_exception:
-            print("The specified profile id does not exist in the environment")
+        for profile_id in profile_ids:
+            try:
+                assert (self.exists(profile_id))
+                deletion_response = requests.delete(
+                    self.config.tenant + ALERTING_PROFILES_ENDPOINT + profile_id,
+                    headers=self.config.auth_header
+                ).status_code
+                if deletion_response == SUCCESS:
+                    print("Profile {id} deleted successfully (response: {code})"
+                          .format(id=profile_id,code=deletion_response))
+                else:
+                    print("Error returned when deleting profile " + profile_id)
+            except AssertionError as assert_exception:
+                print("The specified profile id {id} does not exist in the environment".format(id=profile_id))
 
-        return deletion_response
+        return
 
     def exists(self, profile_id):
         """

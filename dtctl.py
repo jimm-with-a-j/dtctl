@@ -1,7 +1,7 @@
 import fire
 from endpoints.cluster import Cluster
 from endpoints.alerting_profiles import AlertingProfiles
-from config_reader import Config
+from dtctl_modules.config_reader import Config
 
 
 class CLI:
