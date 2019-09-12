@@ -2,7 +2,7 @@
 
 import requests
 import yaml
-from dtctl_modules.config_validate_and_send import validate_and_send
+from dtctl_modules.shared_functions import validate_and_send
 
 ALERTING_PROFILES_ENDPOINT = '/api/config/v1/alertingProfiles/'
 SUCCESS_UNMODIFIED = 204
@@ -51,7 +51,7 @@ class AlertingProfiles:
 
         return response
 
-    def create(self, config_file):
+    def create(self, *config_files):
         """
         Creates an alerting profile using a provide file
 
@@ -59,12 +59,13 @@ class AlertingProfiles:
         :return:
         """
 
-        created = validate_and_send(
-                config_file,
-                self.config.tenant + ALERTING_PROFILES_ENDPOINT,
-                self.config.auth_header,
-                "create"
-                )
+        for config_file in config_files:
+            created = validate_and_send(
+                    config_file,
+                    self.config.tenant + ALERTING_PROFILES_ENDPOINT,
+                    self.config.auth_header,
+                    "create"
+                    )
 
         return
 
@@ -77,20 +78,24 @@ class AlertingProfiles:
         :return:
         """
 
-        updated = validate_and_send(
-                config_file,
-                self.config.tenant + ALERTING_PROFILES_ENDPOINT + str(profile_id) + '/',
-                self.config.auth_header,
-                "update"
-                )
+        try:
+            assert (self.exists(profile_id))
+            updated = validate_and_send(
+                    config_file,
+                    self.config.tenant + ALERTING_PROFILES_ENDPOINT + str(profile_id) + '/',
+                    self.config.auth_header,
+                    "update"
+                    )
+        except AssertionError as assert_exception:
+            print("The specified profile id {id} does not exist in the environment".format(id=profile_id))
 
         return
 
     def delete(self, *profile_ids):
         """
-        Removes the specified alerting profile
+        Removes the specified alerting profiles
 
-        :param profile_id:
+        :param profile_ids:
         :return:
         """
         for profile_id in profile_ids:
@@ -102,7 +107,7 @@ class AlertingProfiles:
                 ).status_code
                 if deletion_response == SUCCESS_UNMODIFIED:
                     print("Profile {id} deleted successfully (response: {code})"
-                          .format(id=profile_id,code=deletion_response))
+                          .format(id=profile_id, code=deletion_response))
                 else:
                     print("Error returned when deleting profile " + profile_id)
             except AssertionError as assert_exception:
