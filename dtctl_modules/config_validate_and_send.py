@@ -19,6 +19,7 @@ def validate_and_send(config_file, target, headers, method):
         with open(config_file, "r") as file:
             try:
                 json_payload = yaml.safe_load(file)
+
                 validation_response = requests.post(target + 'validator', headers=headers, json=json_payload)
                 if validation_response.status_code == VALID:
 
@@ -32,9 +33,18 @@ def validate_and_send(config_file, target, headers, method):
                         success = True
                     else:
                         success = False
+                else:
+                    print(validation_response.json())
+
             except yaml.YAMLError as exc:
                 print("Some issue loading your yaml, please verify it is valid.")
                 print(exc)
+            except Exception as e:
+                print(e)
+
     except FileNotFoundError as exc:
         print("File {file} could not be found".format(file=config_file))
+    except Exception as e:
+        print(e)
+
     return success

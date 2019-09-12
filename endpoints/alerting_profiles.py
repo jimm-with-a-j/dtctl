@@ -5,7 +5,7 @@ import yaml
 from dtctl_modules.config_validate_and_send import validate_and_send
 
 ALERTING_PROFILES_ENDPOINT = '/api/config/v1/alertingProfiles/'
-SUCCESS = 204
+SUCCESS_UNMODIFIED = 204
 
 
 class AlertingProfiles:
@@ -42,7 +42,7 @@ class AlertingProfiles:
         """
 
         response = requests.get(
-            self.config.tenant + ALERTING_PROFILES_ENDPOINT + profile_id,
+            self.config.tenant + ALERTING_PROFILES_ENDPOINT + str(profile_id),
             headers=self.config.auth_header
         ).json()
 
@@ -68,6 +68,24 @@ class AlertingProfiles:
 
         return
 
+    def update(self, profile_id, config_file):
+        """
+        Creates an alerting profile using a provide file
+
+        :param profile_id:
+        :param config_file:
+        :return:
+        """
+
+        updated = validate_and_send(
+                config_file,
+                self.config.tenant + ALERTING_PROFILES_ENDPOINT + str(profile_id) + '/',
+                self.config.auth_header,
+                "update"
+                )
+
+        return
+
     def delete(self, *profile_ids):
         """
         Removes the specified alerting profile
@@ -82,7 +100,7 @@ class AlertingProfiles:
                     self.config.tenant + ALERTING_PROFILES_ENDPOINT + profile_id,
                     headers=self.config.auth_header
                 ).status_code
-                if deletion_response == SUCCESS:
+                if deletion_response == SUCCESS_UNMODIFIED:
                     print("Profile {id} deleted successfully (response: {code})"
                           .format(id=profile_id,code=deletion_response))
                 else:
