@@ -58,13 +58,15 @@ class AlertingProfiles:
         :param config_file:
         :return:
         """
-        rule_id = validate_and_send(
-            config_file,
-            self.config.tenant + ALERTING_PROFILES_ENDPOINT,
-            self.config.auth_header,
-        )['id']
 
-        return rule_id
+        created = validate_and_send(
+                config_file,
+                self.config.tenant + ALERTING_PROFILES_ENDPOINT,
+                self.config.auth_header,
+                "create"
+                )
+
+        return
 
     def delete(self, *profile_ids):
         """
