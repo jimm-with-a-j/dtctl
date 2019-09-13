@@ -3,9 +3,6 @@
 import requests
 import yaml
 
-SUCCESS_UNMODIFIED = 204
-SUCCESS = 201
-
 
 def validate_and_send(self, config_file, config_id=None):
 
@@ -85,3 +82,29 @@ def update(self, config_id, config_file):
         updated = validate_and_send(self, config_file, config_id)
     except AssertionError as e:
         print("{id} does not exist in the environment".format(id=config_id))
+
+
+def delete(self, *config_ids):
+    for config_id in config_ids:
+        try:
+            assert (exists(self, config_id))
+            deletion_response = requests.delete(self.endpoint + config_id, headers=self.config.auth_header).status_code
+            if str(deletion_response).startswith('2'):
+                print("Config {id} deleted successfully (response: {code})"
+                      .format(id=config_id, code=deletion_response))
+            else:
+                print("Error returned when deleting profile " + config_id)
+        except AssertionError as e:
+            print("Config {id} does not exist in the environment".format(id=config_id))
+
+
+def list(self):
+    success, config_list_json = get_json(self)
+    if success:
+        config_list_json = config_list_json['values']
+    return config_list_json
+
+
+def create(self, *config_files):
+    for config_file in config_files:
+        validate_and_send(self, config_file)
