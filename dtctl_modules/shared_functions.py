@@ -63,12 +63,13 @@ def get_id_from_name(self, name):
 
 
 def exists(self, config_id):
+    config_id = str(config_id)
     config_list = self.list()
-    exists = False
+    config_exists = False
     for config in config_list:
         if config['id'] == config_id:
-            exists = True
-    return exists
+            config_exists = True
+    return config_exists
 
 
 def get(self, config_id):
@@ -77,6 +78,7 @@ def get(self, config_id):
 
 
 def update(self, config_id, config_file):
+    config_id = str(config_id)
     try:
         assert (exists(self, config_id))
         updated = validate_and_send(self, config_file, config_id)
