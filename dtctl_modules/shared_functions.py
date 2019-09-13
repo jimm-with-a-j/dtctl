@@ -12,7 +12,12 @@ def validate_and_send(self, config_file, config_id=None):
         with open(config_file, "r") as file:
             try:
                 json_payload = yaml.safe_load(file)
-                validation_response = requests.post(self.endpoint + 'validator', headers=self.config.auth_header, json=json_payload)
+                if config_id is not None:
+                    validation_response = requests.post(self.endpoint + str(config_id) + '/validator/',
+                                                        headers=self.config.auth_header, json=json_payload)
+                if config_id is None:
+                    validation_response = requests.post(self.endpoint + 'validator/',
+                                                        headers=self.config.auth_header, json=json_payload)
                 if str(validation_response.status_code).startswith('2'):
                     # An update vs creation is just a put vs a post http method
                     if config_id is None:
@@ -24,6 +29,7 @@ def validate_and_send(self, config_file, config_id=None):
                         success = True
                     else:
                         success = False
+                        print(response.json())
                 else:
                     print(validation_response.json())
             except yaml.YAMLError as exc:

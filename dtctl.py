@@ -2,6 +2,7 @@ import fire
 from endpoints.cluster import Cluster
 from endpoints.alerting_profiles import AlertingProfiles
 from endpoints.management_zones import ManagementZones
+from endpoints.auto_tags import AutoTags
 from dtctl_modules.config_reader import Config
 
 
@@ -11,6 +12,7 @@ class CLI:
         self.cluster = Cluster(config=self.config)
         self.alerting_profiles = AlertingProfiles(config=self.config)
         self.management_zones = ManagementZones(config=self.config)
+        self.auto_tags = AutoTags(config=self.config)
 
 
 if __name__ == '__main__':
