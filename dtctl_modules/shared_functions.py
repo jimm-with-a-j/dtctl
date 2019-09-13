@@ -7,31 +7,23 @@ SUCCESS_UNMODIFIED = 204
 SUCCESS = 201
 
 
-def validate_and_send(config_file, target, headers, method):
-    """
-    Validates and posts a YAML config file to the specified endpoint
+def validate_and_send(self, config_file, config_id=None):
 
-    :param config_file:
-    :param target:
-    :param headers:
-    :param method:
-    :return:
-    """
     success = False  # whether or not the change was successfully applied
 
     try:
         with open(config_file, "r") as file:
             try:
                 json_payload = yaml.safe_load(file)
-                validation_response = requests.post(target + 'validator', headers=headers, json=json_payload)
-                if validation_response.status_code == SUCCESS_UNMODIFIED:
+                validation_response = requests.post(self.endpoint + 'validator', headers=self.config.auth_header, json=json_payload)
+                if str(validation_response.status_code).startswith('2'):
                     # An update vs creation is just a put vs a post http method
-                    if method == "create":
-                        creation_response = requests.post(target, headers=headers, json=json_payload)
-                    if method == "update":
-                        creation_response = requests.put(target, headers=headers, json=json_payload)
-                    print(creation_response.status_code)
-                    if creation_response.status_code == SUCCESS:
+                    if config_id is None:
+                        response = requests.post(self.endpoint, headers=self.config.auth_header, json=json_payload)
+                    if config_id is not None:
+                        response = requests.put(self.endpoint + config_id, headers=self.config.auth_header, json=json_payload)
+                    print(response.status_code)
+                    if str(response.status_code).startswith('2'):
                         success = True
                     else:
                         success = False
@@ -51,9 +43,9 @@ def validate_and_send(config_file, target, headers, method):
     return success
 
 
-def get_json(target, headers):
+def get_json(self):
     success = False
-    response = requests.get(target, headers=headers)
+    response = requests.get(self.endpoint, headers=self.config.auth_header)
     response_json = response.json()
     if str(response.status_code).startswith('2'):
         success = True
@@ -63,11 +55,33 @@ def get_json(target, headers):
     return success, response_json
 
 
-def get_id_from_name(name, item_list):
+def get_id_from_name(self, name):
     match_list = []
-    for item in item_list:
+    for item in self.list():
         if item['name'] == name:
             match_list.append(item['id'])
     if match_list == []:
         print("No matches for name {name}".format(name=name))
     return match_list
+
+
+def exists(self, config_id):
+    config_list = self.list()
+    exists = False
+    for config in config_list:
+        if config['id'] == config_id:
+            exists = True
+    return exists
+
+
+def get(self, config_id):
+    response = requests.get(self.endpoint + str(config_id), headers=self.config.auth_header)
+    return yaml.safe_dump(response.json(), default_flow_style=False)
+
+
+def update(self, config_id, config_file):
+    try:
+        assert (exists(self, config_id))
+        updated = validate_and_send(self, config_file, config_id)
+    except AssertionError as e:
+        print("{id} does not exist in the environment".format(id=config_id))
