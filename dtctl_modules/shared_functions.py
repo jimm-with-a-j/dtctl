@@ -49,3 +49,25 @@ def validate_and_send(config_file, target, headers, method):
         print(e)
 
     return success
+
+
+def get_json(target, headers):
+    success = False
+    response = requests.get(target, headers=headers)
+    response_json = response.json()
+    if str(response.status_code).startswith('2'):
+        success = True
+    else:
+        print("Error calling {target}, response code: {code}".format(target=target, code=response.status_code))
+
+    return success, response_json
+
+
+def get_id_from_name(name, item_list):
+    match_list = []
+    for item in item_list:
+        if item['name'] == name:
+            match_list.append(item['id'])
+    if match_list == []:
+        print("No matches for name {name}".format(name=name))
+    return match_list

@@ -2,7 +2,7 @@
 
 import requests
 import yaml
-from dtctl_modules.shared_functions import validate_and_send
+from dtctl_modules.shared_functions import validate_and_send, get_json, get_id_from_name
 
 ALERTING_PROFILES_ENDPOINT = '/api/config/v1/alertingProfiles/'
 SUCCESS_UNMODIFIED = 204
@@ -13,26 +13,15 @@ class AlertingProfiles:
         self.config = config
 
     def list(self):
-        """Returns basic info on alerting profiles"""
+        success, profile_list_json = get_json(self.config.tenant + ALERTING_PROFILES_ENDPOINT,
+                                              self.config.auth_header)
+        if success:
+            profile_list_json = profile_list_json['values']
 
-        response = requests.get(
-            self.config.tenant + ALERTING_PROFILES_ENDPOINT,
-            headers=self.config.auth_header
-        )
-
-        return response.json()['values']
+        return profile_list_json
 
     def get_id(self, name):
-        """Returns a list of ids for all profiles that match provided name"""
-
-        alerting_profiles = self.list()  # uses list function to get all alerting profiles
-        matching_profiles = []
-
-        for ap in alerting_profiles:
-            if ap['name'] == name:
-                matching_profiles.append(ap['id'])
-
-        return matching_profiles
+        return get_id_from_name(name, self.list())
 
     def get(self, profile_id, output='JSON'):
         """
