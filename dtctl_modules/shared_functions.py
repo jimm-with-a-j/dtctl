@@ -109,7 +109,10 @@ def delete(self, *config_ids):
 def list(self):
     success, config_list_json = get_json(self)
     if success:
-        config_list_json = config_list_json['values']
+        if self.type == "Dashboard":
+            config_list_json = config_list_json['dashboards']
+        else:
+            config_list_json = config_list_json['values']
     return config_list_json
 
 
