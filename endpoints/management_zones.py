@@ -11,6 +11,7 @@ class ManagementZones:
     def __init__(self, config):
         self.config = config
         self.endpoint = self.config.tenant + MANAGEMENT_ZONES_ENDPOINT
+        self.type = "Management zone"
 
     def list(self):
         return shared.list(self)

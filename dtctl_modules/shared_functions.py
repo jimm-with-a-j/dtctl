@@ -98,8 +98,8 @@ def delete(self, *config_ids):
             assert (exists(self, config_id))
             deletion_response = requests.delete(self.endpoint + config_id, headers=self.config.auth_header).status_code
             if str(deletion_response).startswith('2'):
-                print("Config {id} deleted successfully (response: {code})"
-                      .format(id=config_id, code=deletion_response))
+                print("{config} {id} deleted successfully (response: {code})"
+                      .format(config=self.type, id=config_id, code=deletion_response))
             else:
                 print("Error returned when deleting profile " + config_id)
         except AssertionError as e:

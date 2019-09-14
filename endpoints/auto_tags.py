@@ -11,6 +11,7 @@ class AutoTags:
     def __init__(self, config):
         self.config = config
         self.endpoint = self.config.tenant + AUTO_TAGS_ENDPOINT
+        self.type = "Auto tag rule"
 
     def list(self):
         return shared.list(self)

@@ -12,6 +12,7 @@ class AlertingProfiles:
     def __init__(self, config):
         self.config = config
         self.endpoint = self.config.tenant + ALERTING_PROFILES_ENDPOINT
+        self.type = "Alerting profile"
 
     def list(self):
         return shared.list(self)

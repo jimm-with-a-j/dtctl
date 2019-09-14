@@ -11,6 +11,7 @@ class MaintenanceWindows:
     def __init__(self, config):
         self.config = config
         self.endpoint = self.config.tenant + MAINTENANCE_WINDOWS_ENDPOINT
+        self.type = "Maintenance window"
 
     def list(self):
         return shared.list(self)
