@@ -57,7 +57,7 @@ def get_json(self):
     if str(response.status_code).startswith('2'):
         success = True
     else:
-        print("Error calling {target}, response code: {code}".format(target=target, code=response.status_code))
+        print("Error calling {target}, response code: {code}".format(target=self.endpoint, code=response.status_code))
 
     return success, response_json
 
