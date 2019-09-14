@@ -3,6 +3,7 @@ from endpoints.cluster import Cluster
 from endpoints.alerting_profiles import AlertingProfiles
 from endpoints.management_zones import ManagementZones
 from endpoints.auto_tags import AutoTags
+from endpoints.maintenance_windows import MaintenanceWindows
 from dtctl_modules.config_reader import Config
 
 
@@ -13,6 +14,7 @@ class CLI:
         self.alerting_profiles = AlertingProfiles(config=self.config)
         self.management_zones = ManagementZones(config=self.config)
         self.auto_tags = AutoTags(config=self.config)
+        self.maintenance_windows = MaintenanceWindows(config=self.config)
 
 
 if __name__ == '__main__':
