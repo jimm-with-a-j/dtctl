@@ -12,18 +12,21 @@ def validate_and_send(self, config_file, config_id=None):
         with open(config_file, "r") as file:
             try:
                 json_payload = yaml.safe_load(file)
+                # when validating for an existing config id (e.g. an update)
                 if config_id is not None:
                     validation_response = requests.post(self.endpoint + str(config_id) + '/validator/',
                                                         headers=self.config.auth_header, json=json_payload)
+                # validating a new configuration (e.g. create)
                 if config_id is None:
                     validation_response = requests.post(self.endpoint + 'validator/',
                                                         headers=self.config.auth_header, json=json_payload)
                 if str(validation_response.status_code).startswith('2'):
-                    # An update vs creation is just a put vs a post http method
+                    # An update vs creation is just a put vs a post http method, a config id indicates an update
                     if config_id is None:
                         response = requests.post(self.endpoint, headers=self.config.auth_header, json=json_payload)
                     if config_id is not None:
                         response = requests.put(self.endpoint + config_id, headers=self.config.auth_header, json=json_payload)
+
                     print(response.status_code)
                     if str(response.status_code).startswith('2'):
                         success = True
@@ -32,6 +35,7 @@ def validate_and_send(self, config_file, config_id=None):
                         print(response.json())
                 else:
                     print(validation_response.json())
+
             except yaml.YAMLError as exc:
                 print("Some issue loading your yaml, please verify it is valid.")
                 print(exc)
@@ -40,7 +44,7 @@ def validate_and_send(self, config_file, config_id=None):
 
     except FileNotFoundError as exc:
         print("File {file} could not be found".format(file=config_file))
-    except Exception as e:
+    except Exception as e:  # catching generic exception (not ideal...)
         print(e)
 
     return success
@@ -109,6 +113,7 @@ def delete(self, *config_ids):
 def list(self):
     success, config_list_json = get_json(self)
     if success:
+        # some endpoints return something other than 'values'
         if self.type == "Dashboard":
             config_list_json = config_list_json['dashboards']
         else:
