@@ -23,7 +23,7 @@ class MaintenanceWindows:
         return shared.get(self, window_id)
 
     def create(self, *config_files, directory=None):
-        shared.create(self, *config_files)
+        shared.create(self, *config_files, directory=directory)
 
     def update(self, window_id, config_file):
         shared.update(self, window_id, config_file)

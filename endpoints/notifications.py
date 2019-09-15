@@ -20,8 +20,8 @@ class Notifications:
     def get(self, notification_id):
         return shared.get(self, notification_id)
 
-    def create(self, *notification_ids, directory=None):
-        shared.create(self, *notification_ids)
+    def create(self, *config_files, directory=None):
+        shared.create(self, *config_files, directory=directory)
 
     def update(self, notification_id, config_file):
         shared.update(self, notification_id, config_file)

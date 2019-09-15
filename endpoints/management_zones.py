@@ -23,7 +23,7 @@ class ManagementZones:
         return shared.get(self, zone_id)
 
     def create(self, *config_files, directory=None):
-        shared.create(self, *config_files)
+        shared.create(self, *config_files, directory=directory)
 
     def update(self, zone_id, config_file):
         shared.update(self, zone_id, config_file)
