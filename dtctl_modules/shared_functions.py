@@ -2,6 +2,8 @@
 
 import requests
 import yaml
+import os
+from os.path import join, getsize
 
 
 def validate_and_send(self, config_file, config_id=None):
@@ -121,6 +123,16 @@ def list(self):
     return config_list_json
 
 
-def create(self, *config_files):
-    for config_file in config_files:
-        validate_and_send(self, config_file)
+def create(self, *config_files, directory=None):
+    # when creating specific files
+    if directory is None:
+        for config_file in config_files:
+            validate_and_send(self, config_file)
+    # when passed a directory
+    if directory is not None:
+        for file in os.listdir(directory):
+            if file.endswith(".yaml"):
+                validate_and_send(self, directory + '/' + file)
+
+
+
