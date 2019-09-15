@@ -3,39 +3,21 @@
 import requests
 import yaml
 import os
-from os.path import join, getsize
 
 
 def validate_and_send(self, config_file, config_id=None):
-
     success = False  # whether or not the change was successfully applied
-
     try:
         with open(config_file, "r") as file:
             try:
                 json_payload = yaml.safe_load(file)
-                if validate_config(self, json_payload, config_id=None) is True:
-                    # An update vs creation is just a put vs a post http method, a config id indicates an update
-                    if config_id is None:
-                        response = requests.post(self.endpoint, headers=self.config.auth_header, json=json_payload)
-                    if config_id is not None:
-                        response = requests.put(self.endpoint + config_id, headers=self.config.auth_header, json=json_payload)
-
-                    print(response.status_code)
-                    if str(response.status_code).startswith('2'):
-                        success = True
-                    else:
-                        success = False
-                        print(response.json())
-                else:
-                    print("Not created")
-
+                if validate_config(self, json_payload, config_id) is True:
+                    success = apply_config(self, json_payload, config_id)  # returns boolean
             except yaml.YAMLError as exc:
                 print("Some issue loading your yaml, please verify it is valid.")
                 print(exc)
             except Exception as e:
                 print(e)
-
     except FileNotFoundError as exc:
         print("File {file} could not be found".format(file=config_file))
     except Exception as e:  # catching generic exception (not ideal...)
@@ -60,6 +42,19 @@ def validate_config(self, json_payload, config_id=None):
     except Exception as e:
         print(e)
     return is_valid
+
+
+def apply_config(self, json_payload, config_id=None):
+    is_created = False
+    if config_id is None:
+        response = requests.post(self.endpoint, headers=self.config.auth_header, json=json_payload)
+    if config_id is not None:
+        response = requests.put(self.endpoint + config_id, headers=self.config.auth_header, json=json_payload)
+    if str(response.status_code).startswith('2'):
+        print("Success: " + str(response.status_code))
+    else:
+        print(response.content)
+    return is_created
 
 
 def get_json(self):
