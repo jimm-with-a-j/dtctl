@@ -52,6 +52,24 @@ def validate_and_send(self, config_file, config_id=None):
     return success
 
 
+def validate_config(self, json_payload, config_id=None):
+    is_valid = False
+    try:
+        # when validating for an existing config id (e.g. an update)
+        if config_id is not None:
+            validation_response = requests.post(self.endpoint + str(config_id) + '/validator/',
+                                                headers=self.config.auth_header, json=json_payload)
+        # validating a new configuration (e.g. create)
+        if config_id is None:
+            validation_response = requests.post(self.endpoint + 'validator/',
+                                                headers=self.config.auth_header, json=json_payload)
+        if str(validation_response.status_code).startswith('2'):
+            is_valid = True
+    except Exception as e:
+        print(e)
+    return is_valid
+
+
 def get_json(self):
     success = False
     response = requests.get(self.endpoint, headers=self.config.auth_header)
@@ -130,7 +148,8 @@ def create(self, *config_files, directory=None):
             validate_and_send(self, config_file)
     # when passed a directory
     if directory is not None:
-        for file in os.listdir(directory):
+        configs_in_directory = os.listdir(directory)
+        for file in configs_in_directory:
             if file.endswith(".yaml"):
                 validate_and_send(self, directory + '/' + file)
 
