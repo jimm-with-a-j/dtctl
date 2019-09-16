@@ -17,14 +17,20 @@ class WebApplications:
     def get_id(self, name):
         return shared.get_id_from_name(self, name)
 
-    def get(self, notification_id):
-        return shared.get(self, notification_id)
+    def get(self, web_application_id):
+        return shared.get(self, web_application_id)
+
+    def get_privacy(self, web_application_id):
+        return shared.get(self, web_application_id, path_modifier="/dataPrivacy")
 
     def create(self, *config_files, directory=None):
         shared.create(self, *config_files, directory=directory)
 
     def update(self, web_application_id, config_file):
         shared.update(self, web_application_id, config_file)
+
+    def update_privacy(self, web_application_id, config_file):
+        shared.update(self, web_application_id, config_file, path_modifier='/dataPrivacy')
 
     def delete(self, *web_application_ids):
         shared.delete(self, *web_application_ids)

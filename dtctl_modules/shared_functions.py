@@ -6,14 +6,14 @@ import yaml
 import os
 
 
-def validate_and_send(self, config_file, config_id=None):
+def validate_and_send(self, config_file, config_id=None, path_modifier=""):
     success = False  # whether or not the change was successfully applied
     try:
         with open(config_file, "r") as file:
             try:
                 json_payload = yaml.safe_load(file)
-                if validate_config(self, json_payload, config_id) is True:
-                    success = apply_config(self, json_payload, config_id)  # returns boolean
+                if validate_config(self, json_payload, config_id, path_modifier) is True:
+                    success = apply_config(self, json_payload, config_id, path_modifier)  # returns boolean
             except yaml.YAMLError as exc:
                 print("Some issue loading your yaml, please verify it is valid.")
                 print(exc)
@@ -27,16 +27,16 @@ def validate_and_send(self, config_file, config_id=None):
     return success
 
 
-def validate_config(self, json_payload, config_id=None):
+def validate_config(self, json_payload, config_id=None, path_modifier=""):
     is_valid = False
     try:
         # when validating for an existing config id (e.g. an update)
         if config_id is not None:
-            validation_response = requests.post(self.endpoint + str(config_id) + '/validator/',
+            validation_response = requests.post(self.endpoint + str(config_id) + path_modifier + '/validator/',
                                                 headers=self.config.auth_header, json=json_payload)
         # validating a new configuration (e.g. create)
         if config_id is None:
-            validation_response = requests.post(self.endpoint + 'validator/',
+            validation_response = requests.post(self.endpoint + path_modifier + 'validator/',
                                                 headers=self.config.auth_header, json=json_payload)
         if str(validation_response.status_code).startswith('2'):
             is_valid = True
@@ -45,12 +45,12 @@ def validate_config(self, json_payload, config_id=None):
     return is_valid
 
 
-def apply_config(self, json_payload, config_id=None):
+def apply_config(self, json_payload, config_id=None, path_modifier=""):
     is_created = False
     if config_id is None:
-        response = requests.post(self.endpoint, headers=self.config.auth_header, json=json_payload)
+        response = requests.post(self.endpoint + path_modifier, headers=self.config.auth_header, json=json_payload)
     if config_id is not None:
-        response = requests.put(self.endpoint + config_id, headers=self.config.auth_header, json=json_payload)
+        response = requests.put(self.endpoint + path_modifier + config_id, headers=self.config.auth_header, json=json_payload)
     if str(response.status_code).startswith('2'):
         print("Success: " + str(response.status_code))
     else:
@@ -90,16 +90,19 @@ def exists(self, config_id):
     return config_exists
 
 
-def get(self, config_id):
-    response = requests.get(self.endpoint + str(config_id), headers=self.config.auth_header)
+def get(self, config_id, path_modifier=""):
+    response = requests.get(self.endpoint + str(config_id) + path_modifier, headers=self.config.auth_header)
     return yaml.safe_dump(response.json(), default_flow_style=False)
 
 
-def update(self, config_id, config_file):
+def update(self, config_id, config_file, path_modifier=None):
     config_id = str(config_id)
     try:
         assert (exists(self, config_id))
-        updated = validate_and_send(self, config_file, config_id)
+        if path_modifier is None:
+            updated = validate_and_send(self, config_file, config_id)
+        else:
+            updated = validate_and_send(self, config_file, config_id)
     except AssertionError as e:
         print("{id} does not exist in the environment".format(id=config_id))
 
