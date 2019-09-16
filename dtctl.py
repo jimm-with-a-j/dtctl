@@ -6,6 +6,7 @@ from endpoints.auto_tags import AutoTags
 from endpoints.maintenance_windows import MaintenanceWindows
 from endpoints.dashboards import Dashboards
 from endpoints.notifications import Notifications
+from endpoints.web_applications import WebApplications
 from dtctl_modules.config_reader import Config
 
 
@@ -19,6 +20,7 @@ class CLI:
         self.maintenance_windows = MaintenanceWindows(config=self.config)
         self.dashboards = Dashboards(config=self.config)
         self.notifications = Notifications(config=self.config)
+        self.web_applications = WebApplications(config=self.config)
 
 
 if __name__ == '__main__':

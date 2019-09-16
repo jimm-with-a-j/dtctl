@@ -1,4 +1,5 @@
-# common functions for sending and validating configs
+# common functions that will essentially be the same across API endpoints
+# for any actions specific to those endpoints the work will likely be in that endpoint class
 
 import requests
 import yaml
