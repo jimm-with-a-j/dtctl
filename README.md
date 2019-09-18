@@ -1,5 +1,5 @@
 # dtctl
-This cli is a work in progress. The goal is a straightforward way to control Dynatrace configurations in a fashion similar to and inspired by Kuberenetes' kubectl. Hopefully this will make some tedious administrative tasks faster as well as demonstrate a way that you can store configurtion files outside of Dynatrace.
+This cli is a work in progress. The goal is a straightforward way to control Dynatrace configurations in a fashion similar to and inspired by Kubernetes' kubectl. Hopefully this will make some tedious administrative tasks faster as well as demonstrate a way that you can store configuration files outside of Dynatrace. Right now you interact with all configs as YAML, they get converted to and from JSON when interacting with the API.
 
 To use you must have Python 3.6+ installed as well as the requirements specified in requirements.txt.
 
