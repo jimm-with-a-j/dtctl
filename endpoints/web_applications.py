@@ -17,8 +17,11 @@ class WebApplications:
     def get_id(self, name):
         return shared.get_id_from_name(self, name)
 
-    def get(self, web_application_id):
-        return shared.get(self, web_application_id)
+    def get(self, web_application_id, config_type=None):
+        if config_type == "privacy":
+            return shared.get(self, web_application_id, path_modifier="/dataPrivacy")
+        else:
+            return shared.get(self, web_application_id)
 
     def get_privacy(self, web_application_id):
         return shared.get(self, web_application_id, path_modifier="/dataPrivacy")
