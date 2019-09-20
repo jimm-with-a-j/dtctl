@@ -42,7 +42,7 @@ Currently the following operations are supported for the supported endpoints (se
   * dashboards
   * maintenance-windows
   * management-zones
-  * notfications (problem notifications)
+  * notifications (problem notifications)
   * web-applications
     - for now use describe-privacy or update-privacy when working with data privacy rules for a web app
   * cluster
