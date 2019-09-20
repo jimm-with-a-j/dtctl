@@ -19,9 +19,9 @@ Currently the following operations are supported for the supported endpoints (se
 * list
   - Returns the name and id of all of the relevant configs/rules
   - python dtctl.py management-zones list
-* get <id>
+* describe <id>
   - Returns the configuration for a given config rule in YAML format (can be piped to a file for storage or modification)
-  - python dtctl.py alerting-profiles get fb5b38f5-4f6e-48e5-86e5-2148808cb1f2
+  - python dtctl.py alerting-profiles describe fb5b38f5-4f6e-48e5-86e5-2148808cb1f2
 * create <example.yaml>[, <example_2.yaml>] or directory=(/directory)
   - either creates a rule using the provided yaml file (or series of files) or if the --directory= option is used creates rules for all of the files in that directory
   - python dtctl.py notifications create example.yaml
@@ -42,9 +42,9 @@ Currently the following operations are supported for the supported endpoints (se
   * dashboards
   * maintenance-windows
   * management-zones
-  * notfications (problem notifications)
+  * notifications (problem notifications)
   * web-applications
-    - for now use get-privacy or update-privacy when working with data privacy rules for a web app
+    - for now use describe-privacy or update-privacy when working with data privacy rules for a web app
   * cluster
     - options for the cluster endpoint are:
       - python dtctl.py cluster version
