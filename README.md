@@ -28,7 +28,7 @@ Currently the following operations are supported for the supported endpoints (se
   - `python dtctl.py notifications create example.yaml`
   - `python dtctl.py notifications create example.yaml example_2.yaml`
   - `python dtctl.py notifications create --directory=/myconfigs/tocreate`
-  - try "getting" a config to see what these yaml files can look like for different config types / endpoints
+  - try "describing" a config to see what these yaml files can look like for different config types / endpoints
 * update config_id example.yaml
   - updates the config rule specified by id with the supplied yaml file
   - `python dtctl.py alerting-profiles update 49e329e5-4a04-4e21-b7b4-3c748589be16 example.yaml`
