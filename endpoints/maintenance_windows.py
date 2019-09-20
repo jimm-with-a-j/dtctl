@@ -19,8 +19,8 @@ class MaintenanceWindows:
     def get_id(self, name):
         return shared.get_id_from_name(self, name)
 
-    def get(self, window_id):
-        return shared.get(self, window_id)
+    def describe(self, window_id):
+        return shared.describe(self, window_id)
 
     def create(self, *config_files, directory=None):
         shared.create(self, *config_files, directory=directory)

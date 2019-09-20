@@ -17,8 +17,8 @@ class Notifications:
     def get_id(self, name):
         return shared.get_id_from_name(self, name)
 
-    def get(self, notification_id):
-        return shared.get(self, notification_id)
+    def describe(self, notification_id):
+        return shared.describe(self, notification_id)
 
     def create(self, *config_files, directory=None):
         shared.create(self, *config_files, directory=directory)

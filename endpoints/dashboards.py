@@ -17,8 +17,8 @@ class Dashboards:
     def get_id(self, name):
         return shared.get_id_from_name(self, name)
 
-    def get(self, dashboard_id):
-        return shared.get(self, dashboard_id)
+    def describe(self, dashboard_id):
+        return shared.describe(self, dashboard_id)
 
     def create(self, *config_files, directory=None):
         shared.create(self, *config_files, directory=directory)

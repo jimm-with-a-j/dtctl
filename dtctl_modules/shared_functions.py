@@ -90,7 +90,7 @@ def exists(self, config_id):
     return config_exists
 
 
-def get(self, config_id, path_modifier=""):
+def describe(self, config_id, path_modifier=""):
     response = requests.get(self.endpoint + str(config_id) + path_modifier, headers=self.config.auth_header)
     return yaml.safe_dump(response.json(), default_flow_style=False)
 

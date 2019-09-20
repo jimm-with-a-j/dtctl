@@ -20,8 +20,8 @@ class AlertingProfiles:
     def get_id(self, name):
         return shared.get_id_from_name(self, name)
 
-    def get(self, profile_id):
-        return shared.get(self, profile_id)
+    def describe(self, profile_id):
+        return shared.describe(self, profile_id)
 
     def create(self, *config_files, directory=None):
         shared.create(self, *config_files, directory=directory)

@@ -19,8 +19,8 @@ class AutoTags:
     def get_id(self, name):
         return shared.get_id_from_name(self, name)
 
-    def get(self, zone_id):
-        return shared.get(self, zone_id)
+    def describe(self, zone_id):
+        return shared.describe(self, zone_id)
 
     def create(self, *config_files, directory=None):
         shared.create(self, *config_files, directory=directory)
