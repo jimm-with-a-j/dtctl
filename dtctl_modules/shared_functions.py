@@ -111,7 +111,7 @@ def delete(self, *config_ids):
     for config_id in config_ids:
         try:
             assert (exists(self, config_id))
-            deletion_response = requests.delete(self.endpoint + config_id, headers=self.config.auth_header).status_code
+            deletion_response = requests.delete(self.endpoint + str(config_id), headers=self.config.auth_header).status_code
             if str(deletion_response).startswith('2'):
                 print("{config} {id} deleted successfully (response: {code})"
                       .format(config=self.type, id=config_id, code=deletion_response))
