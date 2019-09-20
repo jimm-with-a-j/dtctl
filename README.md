@@ -12,6 +12,7 @@ token: <token>
 tenant:<environment location e.g.-> https://blablabla.sprint.dynatracelabs.com>
 defaultApiVersion: v1
 ```
+The config yaml file should be named exactly dtctl.yaml and should be in the same directory as dtctl.py.
 ## Usage
 General usage will be python dtctl.py <endpoint> <operation> [\<config or entity id>]
 ### Supported operations
