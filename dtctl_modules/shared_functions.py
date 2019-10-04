@@ -40,6 +40,8 @@ def validate_config(self, json_payload, config_id=None, path_modifier=""):
                                                 headers=self.config.auth_header, json=json_payload)
         if str(validation_response.status_code).startswith('2'):
             is_valid = True
+        else:
+            print(validation_response.content)
     except Exception as e:
         print(e)
     return is_valid
